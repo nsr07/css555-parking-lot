@@ -1,0 +1,10 @@
+A parking lot system that support:
+1. Vehicle's plate number and height are scaned by Camera
+2. Tracking for each slot: is it available or not.
+3. Support three different sizes of vehicle: small, combact, and large.
+4. Tracking the time for each vehicle.
+5. Calculate parking fee based on the parking time.
+
+Non-functional requirements
+1. Does not allow a vehicle with more than 6' height to enter.
+2. The gate has to close within 5sec after the vehicle depart.

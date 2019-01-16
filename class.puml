@@ -1,0 +1,32 @@
+@startuml "Parking Lot: Class Diagram"
+class ParkingManager {
+    - slots: Slot[]
+    + numberOfSlots: Integer
+    - initilizeSlots()
+    + requestPermit()
+}
+
+enum Size {
+    Small
+    Compact
+    Large
+}
+
+class Vehicle {
+    - size: Size
+    + getSize
+}
+
+class Slot {
+    - size: Size
+    + park(Vehicle vehicle)
+    + isAvailable(): Boolean
+}
+
+ParkingManager *-- Slot 
+
+Slot -- Size
+
+Vehicle -- Size
+
+@enduml
