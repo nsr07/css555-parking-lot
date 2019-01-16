@@ -1,0 +1,61 @@
+@startuml "Parking Lot: Class Diagram"
+skinparam dpi 300
+
+
+enum Size {
+    Small
+    Compact
+    Large
+}
+class Gate {
+    + open(): void
+    + close(): void
+}
+class ParkingManager {
+    - slots: Slot[]
+    - initilizeSlots()
+}
+
+interface ISize {
+    getSize(): Size
+}
+
+class Camera {
+
+    + Camera(ParkingManger pm)
+    + scan(): void
+}
+
+class MotionSensor {
+    + MotionSensor(Camera cam)
+}
+
+
+
+class Vehicle {
+    - size: Size
+    - plateNumber: String
+    - height: float
+    + Vehicle(String plate, float height)
+    + getSize(): Size
+    + getPlate(): String
+}
+
+class Slot {
+    - size: Size
+    + park(Vehicle vehicle)
+    + depart(Vehicle vehicle)
+    + isAvailable(): Boolean
+    + getSize(): Size
+}
+
+Camera - ParkingManager : has >
+MotionSensor -- Camera : has >
+ParkingManager -  Gate : has >
+
+ParkingManager " 1 "*-- " 0..* " Slot
+
+Slot  --|> ISize
+Vehicle -|> ISize
+
+@enduml

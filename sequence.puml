@@ -1,4 +1,5 @@
 @startuml "Parking Lot: Sequence Diagram"
+skinparam dpi 300
 
 actor Driver
 actor Vehicle
@@ -8,51 +9,62 @@ participant Slot as S
 participant Gate as G
 
 activate M
-activate C
 activate G
-
 
 M -> S : Initilize
 activate S
 
 group Entering the parking lot
-Vehicle -> C : Approching the gate
-C --> Vehicle : Scan 
-C --> M : Provide Plate# and Height
+    Vehicle -> C : Approching entrance gate
+    note right of Vehicle
+        This is triggerd by Motion
+        Sensor.
+    end note
+    activate C
+    rnote over C : scan vehicle \nimage
+    C --> M : Provide Plate# and Height
+    deactivate C
 end
 
-M -> M : Check for vehicle height
+M --> M : Check for vehicle height
 alt allowed to enter
+    M --> M : Check for available slot
+    alt available
 
-M -> M : Check for available slot
-alt available 
+        M --> G : Open Entrance Gate
+        rnote over G :wait 2 sec
+        G --> G : Close
+        Driver -> S: Park
+        S --> M: Reserved
+        Driver -> S: Depart
+        S--> M: Clear
 
-M -> G : Open
+        group Exiting the parking lot
+            Vehicle -> C: Approching exit gate
+            activate C
+            note right of Vehicle
+                This is triggerd by Motion
+                Sensor.
+            end note
+            C --> M: Provide Plate#
+            deactivate C
+            M --> Driver: Ask for Payment
+        end
 
-Driver -> S: Park
-S -> M: Reserved
-Driver -> S: Depart
-S-> M: Clear
+        group Payment
+            Driver -> M: Pay
+            M --> G: Open Exit
+            deactivate Vehicle
+            rnote over G: wait 5 sec
+            G --> G: Close
+        end
 
-group Exiting the parking lot
-Vehicle -> C: Approching the gate
-C --> M: Provide Plate#
-M --> Driver: Ask for Payment
-end
+    else
+        M --> Driver: Display "Parking is full!"
+    end
 
-group Payment
-Driver -> M: Pay
-M --> G: Open
-rnote over G: wait 5 sec
-G -> G: Close
-end
-
-else 
-M --> Driver: Display "Parking is full!"
-end 
-
-else 
-M --> Driver: Display "You are not allowed to enter!"
+else
+    M --> Driver: Display "You are not allowed to enter!"
 
 end
 
