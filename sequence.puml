@@ -1,5 +1,6 @@
 @startuml "Parking Lot: Sequence Diagram"
 
+actor Driver
 actor Vehicle
 participant "Parking Manager" as M
 participant Camera as C
@@ -14,10 +15,11 @@ activate G
 M -> S : Initilize
 activate S
 
+group Entering the parking lot
 Vehicle -> C : Approching the gate
 C --> Vehicle : Scan 
 C --> M : Provide Plate# and Height
-
+end
 
 M -> M : Check for vehicle height
 alt allowed to enter
@@ -27,30 +29,30 @@ alt available
 
 M -> G : Open
 
-Vehicle -> S: Park
+Driver -> S: Park
 S -> M: Reserved
-Vehicle -> S: Depart
+Driver -> S: Depart
 S-> M: Clear
 
+group Exiting the parking lot
 Vehicle -> C: Approching the gate
-
 C --> M: Provide Plate#
+M --> Driver: Ask for Payment
+end
 
-M --> Vehicle: Ask for Payment
-
-alt Payment
-Vehicle -> M: Pay
+group Payment
+Driver -> M: Pay
 M --> G: Open
 rnote over G: wait 5 sec
 G -> G: Close
 end
 
 else 
-M --> Vehicle: Display "Parking is full!"
+M --> Driver: Display "Parking is full!"
 end 
 
 else 
-M --> Vehicle: Display "You are not allowed to enter!"
+M --> Driver: Display "You are not allowed to enter!"
 
 end
 
